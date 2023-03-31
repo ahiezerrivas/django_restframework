@@ -1,0 +1,102 @@
+serializers 
+Serializers allow complex data such as querysets and model instances to be converted to native Python datatypes that can then be easily rendered into JSON, XML or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types, after first validating the incoming data.
+
+The serializers in REST framework work very similarly to Django's Form and ModelForm classes. We provide a Serializer class which gives you a powerful, generic way to control the output of your responses, as well as a ModelSerializer class which provides a useful shortcut for creating serializers that deal with model instances and querysets
+
+
+Qué significan *args y **kwargs como parámetros
+Entendiendo *args
+En Python, el parámetro especial *args en una función se usa para pasar, de forma opcional, un número variable de argumentos posicionales.
+
+Jajaja, vaya paranoia de definición. Vamos a verla detalladamente:
+
+Lo que realmente indica que el parámetro es de este tipo es el símbolo ‘*’, el nombre args se usa por convención.
+El parámetro recibe los argumentos como una tupla.
+Es un parámetro opcional. Se puede invocar a la función haciendo uso del mismo, o no.
+El número de argumentos al invocar a la función es variable.
+Son parámetros posicionales, por lo que, a diferencia de los parámetros con nombre, su valor depende de la posición en la que se pasen a la función.
+Pero como yo siempre digo, las cosas se ven mejor con un ejemplo:
+
+La siguiente función toma dos parámetros y devuelve como resultado la suma de los mismos:
+
+def sum(x, y):
+    return x + y
+Si llamamos a la función con los valores x=2 e y=3, el resultado devuelto será 5.
+
+>>>sum(2, 3)
+5
+Pero, ¿qué ocurre si posteriormente decidimos o nos damos cuenta de que necesitamos sumar un valor más?
+
+>>>sum(2, 3, 4)
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+TypeError: sum() takes 2 positional arguments but 3 were given
+Obviamente, estaba claro de que la llamada a la función iba a fallar.
+
+¿Cómo podemos solucionar este problema? Pues una opción sería añadir más parámetros a la función, pero ¿cuántos?
+
+La mejor solución, la más elegante y la más al estilo Python es hacer uso de *args en la definición de esta función. De este modo, podemos pasar tantos argumentos como queramos. Pero antes de esto, tenemos que reimplementar nuestra función sum:
+
+def sum(*args):
+    value = 0
+    for n in args:
+        value += n
+    return value
+Con esta nueva implementación, podemos llamar a la función con cualquier número variable de valores:
+
+>>>sum()
+0
+>>>sum(2, 3)
+5
+>>>sum(2, 3, 4)
+9
+>>>sum(2, 3, 4, 6, 9, 21)
+45
+Entendiendo **kwargs
+Veamos ahora el uso de **kwargs como parámetro.
+
+En Python, el parámetro especial **kwargs en una función se usa para pasar, de forma opcional, un número variable de argumentos con nombre.
+
+Las principales diferencias con respecto *args son:
+
+Lo que realmente indica que el parámetro es de este tipo es el símbolo ‘**’, el nombre kwargs se usa por convención.
+El parámetro recibe los argumentos como un diccionario.
+Al tratarse de un diccionario, el orden de los parámetros no importa. Los parámetros se asocian en función de las claves del diccionario.
+¿Cuándo es útil su uso?
+
+Imaginemos que queremos implementar una función filter que nos devuelva una consulta SQL de una tabla clientes que tiene los siguientes campos: nombre, apellidos, fecha_alta, ciudad, provincia, tipo y fecha_nacimiento.
+
+Una primera aproximación podría ser la siguiente:
+
+def filter(ciudad, provincia, fecha_alta):
+    return "SELECT * FROM clientes WHERE ciudad='{}' AND provincia='{}' AND fecha_alta={};".format(ciudad, provincia, fecha_alta)
+No es una función para sentirse muy contento 😖 Entre los diferentes problemas que pueden surgir tenemos:
+
+Si queremos filtrar por un nuevo parámetro, hay que cambiar la definición de la función así como la implementación.
+Los parámetros son todos obligatorios.
+Si queremos consultar otro tipo de clientes manteniendo esta consulta, debemos crear una nueva función.
+La solución a todos estos problemas está en hacer uso del parámetro **kwargs. Veamos cómo sería la nueva función filter usando **kwargs:
+
+def filter(**kwargs):
+    query = "SELECT * FROM clientes"
+    i = 0
+    for key, value in kwargs.items():
+        if i == 0:
+            query += " WHERE "
+        else:
+            query += " AND "
+        query += "{}='{}'".format(key, value)
+        i += 1
+    query += ";"
+    return query
+Con esta nueva implementación hemos resuelto todos nuestros problemas como auténticos pythonistas 😄🐍
+
+A continuación podemos ver cómo se comporta la nueva función filter:
+
+>>>filter()
+SELECT * FROM clientes;
+>>>filter(ciudad="Madrid")
+SELECT * FROM clientes WHERE ciudad='Madrid';
+>>>filter(ciudad="Madrid", fecha_alta="25-10-2018")
+SELECT * FROM clientes WHERE ciudad='Madrid' AND fecha_alta='25-10-2018';
+Hasta aquí hemos visto qué significan los parámetros *args y **kwargs en una función

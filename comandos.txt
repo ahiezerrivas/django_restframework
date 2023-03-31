@@ -1,0 +1,29 @@
+python -m venv venv
+
+.\venv\Scripts\activate
+
+pip install djangorestframework
+
+django-admin startproject ecommerce_rest
+
+django-admin startapp users
+
+pip install django-simple-history
+
+pip install Pillow
+
+pip install drf-yasg
+
+django-admin startapp base
+
+django-admin startapp products
+
+python manage.py createsuperuser
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py runserver
+
+
