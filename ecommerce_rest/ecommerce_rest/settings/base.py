@@ -46,6 +46,7 @@ SWAGGER_SETTINGS = {
     'DOC_EXPANSION': 'none'
 }
 
+TOKEN_EXPIRED_AFTER_SECONDS = 900
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -106,7 +107,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 AUTH_USER_MODEL = 'users.User'
 
