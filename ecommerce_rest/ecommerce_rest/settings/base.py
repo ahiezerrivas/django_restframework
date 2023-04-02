@@ -47,7 +47,7 @@ SWAGGER_SETTINGS = {
     'DOC_EXPANSION': 'none'
 }
 
-TOKEN_EXPIRED_AFTER_SECONDS = 900
+TOKEN_EXPIRED_AFTER_SECONDS = 60
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
